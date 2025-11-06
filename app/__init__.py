@@ -2,8 +2,11 @@
 from flask import Flask
 from .config import Config
 from flask_pymongo import PyMongo
+from flask_apscheduler import APScheduler
+from app.services.open_sky_client import get_flights_over_cdmx
 
 mongo = PyMongo()
+scheduler = APScheduler()
 
 def create_app():
     app = Flask(__name__)
@@ -12,8 +15,27 @@ def create_app():
     # Inicializa Mongo
     mongo.init_app(app)
 
+
+    app.mongo = mongo
+
+
     # Importa rutas aquí (para evitar importaciones circulares)
     from .routes.FlightsRoutes import flights_bp
     app.register_blueprint(flights_bp)
-
+    # Agrega el job una sola vez
+    if not scheduler.running:
+        scheduler.init_app(app)
+        scheduler.add_job(
+            id='RetrieveFlights',
+            func=job_retrieve_flights,
+            trigger='interval',
+            seconds=10
+        )
+        scheduler.start()
     return app
+
+def job_retrieve_flights():
+    print("🛰️ Consultando vuelos...")
+    flights = get_flights_over_cdmx()
+    # Guarda en base de datos
+    print(f"{len(flights)} vuelos guardados correctamente")
