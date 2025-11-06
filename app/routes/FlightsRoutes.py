@@ -1,24 +1,17 @@
-from flask import Blueprint, request, jsonify
-from .. import mongo
+from flask import Blueprint, jsonify
+from ..services.open_sky_client import get_flights_over_cdmx
+from ..services.db_manager import save_flights, get_all_flights
 
 #Creamos el blueprint
 flights_bp = Blueprint('flights', __name__, url_prefix='/flights')
 
-@flights_bp.route('/')
-def hello():
-    return '¡Hola, mundo!'
+@flights_bp.route("/update_flights", methods=["GET"])
+def update_flights():
+    flights = get_flights_over_cdmx()
+    count = save_flights(flights)
+    return jsonify({"message": f"{count} vuelos guardados correctamente."})
 
-@flights_bp.route('/test', methods=['POST'])
-def test_connection():
-    data = request.get_json()
-
-    # Insertar en la colección 'tests'
-    result = mongo.db.test.insert_one({
-        "name": data.get("name", "sin_nombre"),
-        "message": data.get("message", "sin_mensaje")
-    })
-
-    return jsonify({
-        "status": "success",
-        "inserted_id": str(result.inserted_id)
-    }), 201
+@flights_bp.route("/", methods=["GET"])
+def get_flights():
+    flights = get_all_flights()
+    return jsonify(flights)
