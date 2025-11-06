@@ -8,12 +8,12 @@ flights_bp = Blueprint('flights', __name__, url_prefix='/flights')
 def hello():
     return '¡Hola, mundo!'
 
-@flights_bp.route('/test')
+@flights_bp.route('/test', methods=['POST'])
 def test_connection():
     data = request.get_json()
 
     # Insertar en la colección 'tests'
-    result = mongo.vuelosDB.hack.insert_one({
+    result = mongo.db.test.insert_one({
         "name": data.get("name", "sin_nombre"),
         "message": data.get("message", "sin_mensaje")
     })
