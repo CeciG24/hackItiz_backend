@@ -12,12 +12,11 @@ def save_flights(flights):
     if not flights:
         return 0
 
-
     flights_collection.delete_many({})  # limpiar para mantener solo los actuales
 
     if flights_collection.insert_many(flights):
-        print("Flights inseridos com sucesso")
-    flights_collection.insert_many(flights)
+        print("Flights insertados con exito")
+
     return len(flights)
 
 def get_all_flights():
