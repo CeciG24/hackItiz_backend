@@ -22,11 +22,3 @@ def get_flights():
     except Exception as e:
         return jsonify({"error": str(e)})
     
-@flights_bp.route("/count", methods=["GET"])
-def count_flights():
-    try:
-        flights = get_all_flights()
-        count = len(flights)
-        return jsonify({"Vuelos en BD": count})
-    except Exception as e:
-        return jsonify({"error": str(e)})

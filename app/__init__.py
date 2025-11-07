@@ -21,7 +21,9 @@ def create_app():
 
     # Importa rutas aquí (para evitar importaciones circulares)
     from .routes.FlightsRoutes import flights_bp
+    from .routes.MetricsRoutes import metrics_bp
     app.register_blueprint(flights_bp)
+    app.register_blueprint(metrics_bp)
     # Agrega el job una sola vez
     if not scheduler.running:
         scheduler.init_app(app)
