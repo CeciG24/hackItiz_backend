@@ -1,6 +1,8 @@
 import requests
 from datetime import datetime
 
+from requests.auth import HTTPBasicAuth
+
 OPEN_SKY_URL = "https://opensky-network.org/api/states/all"
 CDMX_PARAMS = {
     "lamin": 19.2,
@@ -12,7 +14,7 @@ CDMX_PARAMS = {
 def get_flights_over_cdmx():
     """Obtiene vuelos activos sobre CDMX desde OpenSky"""
     try:
-        response = requests.get(OPEN_SKY_URL, params=CDMX_PARAMS, timeout=10)
+        response = requests.get(OPEN_SKY_URL, params=CDMX_PARAMS,  auth=HTTPBasicAuth('ianarce-api-client', 'LPTPJviWRxciCcUbpLvjST47mAbml1Zq'),timeout=15)
         response.raise_for_status()
         data = response.json()
 
