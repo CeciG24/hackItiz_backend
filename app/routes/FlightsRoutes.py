@@ -21,3 +21,12 @@ def get_flights():
         return jsonify(flights)
     except Exception as e:
         return jsonify({"error": str(e)})
+    
+@flights_bp.route("/count", methods=["GET"])
+def count_flights():
+    try:
+        flights = get_flights_over_cdmx()
+        count = len(flights)
+        return jsonify(count)
+    except Exception as e:
+        return jsonify({"error": str(e)})
