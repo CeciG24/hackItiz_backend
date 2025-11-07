@@ -5,7 +5,6 @@ from ..config import Config
 client = MongoClient(Config.MONGO_URI)
 db = client["vuelosDB"]
 flights_collection = db["flights"]
-flights_collection = db["flights"]
 
 def save_flights(flights):
     """Guarda vuelos en MongoDB (elimina anteriores antes de insertar nuevos)"""

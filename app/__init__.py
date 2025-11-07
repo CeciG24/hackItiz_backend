@@ -18,17 +18,19 @@ def create_app():
     # Inicializa Mongo
     mongo.init_app(app)
 
-
     app.mongo = mongo
-
 
     # Importa rutas aquí (para evitar importaciones circulares)
     from .routes.FlightsRoutes import flights_bp
     from .routes.MetricsRoutes import metrics_bp
     from .routes.HealthRoutes import health_bp
+    from .routes.ZabbixWebhook import zabbix_bp
+
     app.register_blueprint(flights_bp)
     app.register_blueprint(metrics_bp)
     app.register_blueprint(health_bp)
+    app.register_blueprint(zabbix_bp)
+
     CORS(app)
     # Agrega el job una sola vez
     if not scheduler.running:
