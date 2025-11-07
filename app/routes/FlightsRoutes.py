@@ -25,8 +25,8 @@ def get_flights():
 @flights_bp.route("/count", methods=["GET"])
 def count_flights():
     try:
-        flights = get_flights_over_cdmx()
+        flights = get_all_flights()
         count = len(flights)
-        return jsonify(count)
+        return jsonify({"Vuelos en BD": count})
     except Exception as e:
         return jsonify({"error": str(e)})
