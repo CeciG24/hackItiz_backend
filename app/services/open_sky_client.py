@@ -1,6 +1,5 @@
 import requests
 from datetime import datetime
-
 from requests.auth import HTTPBasicAuth
 
 OPEN_SKY_URL = "https://opensky-network.org/api/states/all"
@@ -11,10 +10,25 @@ CDMX_PARAMS = {
     "lomax": -98.9
 }
 
+USERNAME = "ianarce-api-client"  # tu usuario OpenSky
+PASSWORD = "DDAJ9FSt8lFWKkbqXfPgTmnYJctpzafd"  # tu contraseña OpenSky
+
 def get_flights_over_cdmx():
-    """Obtiene vuelos activos sobre CDMX desde OpenSky"""
+    """Obtiene vuelos activos sobre CDMX desde OpenSky, usando credenciales si están disponibles"""
     try:
-        response = requests.get(OPEN_SKY_URL, params=CDMX_PARAMS,  auth=HTTPBasicAuth('ianarce-api-client', 'LPTPJviWRxciCcUbpLvjST47mAbml1Zq'),timeout=15)
+        # Intentamos con autenticación
+        response = requests.get(
+            OPEN_SKY_URL,
+            params=CDMX_PARAMS,
+            auth=HTTPBasicAuth(USERNAME, PASSWORD),
+            timeout=10
+        )
+
+        # Si da 401 (credenciales incorrectas), caemos a acceso anónimo
+        if response.status_code == 401:
+            print("Credenciales inválidas, usando acceso anónimo")
+            response = requests.get(OPEN_SKY_URL, params=CDMX_PARAMS, timeout=10)
+
         response.raise_for_status()
         data = response.json()
 
@@ -43,6 +57,7 @@ def get_flights_over_cdmx():
             })
 
         return flights
+
     except Exception as e:
         print(f"Error al consultar OpenSky: {e}")
         return []
