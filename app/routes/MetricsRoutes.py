@@ -14,3 +14,19 @@ def get_flight_count():
 def last_update():
     last = flights_collection.find_one(sort=[("_id", -1)])
     return jsonify({"timestamp": last["timestamp"]})
+
+@metrics_bp.route("/stats")
+def stats_overview():
+    total = flights_collection.count_documents({})
+    en_vuelo = flights_collection.count_documents({"on_ground": False})
+    en_tierra = total - en_vuelo
+    promedio_vel = flights_collection.aggregate([{"$group": {"_id": None, "avgVel": {"$avg": "$velocity"}}}])
+    promedio_alt = flights_collection.aggregate([{"$group": {"_id": None, "avgAlt": {"$avg": "$baro_altitude"}}}])
+    
+    return jsonify({
+        "total_vuelos": total,
+        "en_vuelo": en_vuelo,
+        "en_tierra": en_tierra,
+        "promedio_velocidad": list(promedio_vel)[0]["avgVel"],
+        "promedio_altitud": list(promedio_alt)[0]["avgAlt"]
+    })
