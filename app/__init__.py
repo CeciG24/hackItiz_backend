@@ -37,7 +37,8 @@ def create_app():
             id='RetrieveFlights',
             func=job_retrieve_flights,
             trigger='interval',
-            seconds=30
+            seconds=30,
+            max_instances=3
         )
         scheduler.start()
 
