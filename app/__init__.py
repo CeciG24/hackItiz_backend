@@ -49,6 +49,5 @@ def job_retrieve_flights():
     print("🛰️ Consultando vuelos...")
     flights = get_flights_over_cdmx()
     # Guarda en base de datos
-
     save_flights(flights)
     print(f"{len(flights)} vuelos guardados correctamente")
