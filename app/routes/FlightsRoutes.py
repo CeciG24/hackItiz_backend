@@ -82,3 +82,4 @@ def flights_discovery():
     return jsonify({
         "data": [{"{#CALLSIGN}": f.get("callsign").strip()} for f in tracked]
     })
+
